@@ -10,5 +10,10 @@ def assets_markup_maker(my_assets: list[AssetsShow]) -> InlineKeyboardMarkup:
     for item in my_assets:
         short_name = item.name.split()[0]
         callback_data = f'{Constants.ACCETS_CALBACK}{item.figi}'
-        markup.add(InlineKeyboardButton(text=short_name, callback_data=callback_data))
+        markup.add(
+            InlineKeyboardButton(text=short_name, callback_data=callback_data))
     return markup
+
+
+def current_asset_markup_maker(figi: str):
+    raise NotImplementedError
