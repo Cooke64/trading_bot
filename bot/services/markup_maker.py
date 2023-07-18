@@ -16,4 +16,25 @@ def assets_markup_maker(my_assets: list[AssetsShow]) -> InlineKeyboardMarkup:
 
 
 def current_asset_markup_maker(figi: str):
-    raise NotImplementedError
+    figi = figi.split('_')[1]
+    current_asset = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text='График свеч', callback_data=f'Item_candle_{figi}'
+                ),
+                InlineKeyboardButton(
+                    text='Доходность', callback_data=f'Item_benefits_{figi}'
+                ),
+                InlineKeyboardButton(
+                    text='Купить', callback_data=f'Item_buy_{figi}'
+                ),
+                InlineKeyboardButton(
+                    text='Продать', callback_data=f'Item_sell_{figi}'
+                ),
+            ],
+        ],
+        row_width=2
+    )
+    return current_asset
+

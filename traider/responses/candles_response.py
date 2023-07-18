@@ -12,7 +12,7 @@ class CandleBase(BaseModel):
         - hight: максимальная цена
         - low: минимальная цена
     """
-    time: datetime = Field(...)
+    time: str = Field(...)
     volume: int | float = Field(...)
     open: float = Field(...)
     close: float = Field(...)

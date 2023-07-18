@@ -3,8 +3,10 @@ from aiogram.types import Message, CallbackQuery
 from tinkoff.invest import CandleInterval
 
 from bot.Constants import Constants
+from bot.keyboards.inline_buttons import current_asset
 from bot.loader import dp
-from bot.services.markup_maker import assets_markup_maker
+from bot.services.markup_maker import assets_markup_maker, \
+    current_asset_markup_maker
 from traider.candles_service.get_my_candles import candles, TimeDelta
 from traider.user_info_service.get_user_info import user_info
 
@@ -28,8 +30,8 @@ async def run_start_command(messages: Message):
 
 @dp.callback_query_handler(
     lambda call: call.data.startswith(Constants.ACCETS_CALBACK))
-async def download_audio_handler(call: CallbackQuery):
-    print(candles.get_candles_by_figi(
-        call.data, TimeDelta.days, 5, CandleInterval.CANDLE_INTERVAL_DAY
-    ))
-    await call.message.answer(user_info.get_current_asset(call.data))
+async def current_asset_item_handler(call: CallbackQuery):
+    await call.message.answer(
+        user_info.get_current_asset(call.data),
+        reply_markup=current_asset_markup_maker(call.data)
+    )
