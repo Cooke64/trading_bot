@@ -6,7 +6,7 @@ main_menu_buttons = ReplyKeyboardMarkup(
     keyboard=[
         [
             KeyboardButton(text=Constants.INFO_ASSETS),
-            KeyboardButton(text='❕ Пройду ли я к вам?'),
+            KeyboardButton(text=Constants.LAST_OPERATIONS),
         ],
         [
             KeyboardButton(text='📞 Связаться с нами'),

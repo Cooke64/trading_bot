@@ -1,14 +1,12 @@
 from aiogram.dispatcher.filters import Text
 from aiogram.types import Message, CallbackQuery
-from tinkoff.invest import CandleInterval
+from tinkoff.invest.grpc.operations_pb2 import Operation
 
 from bot.Constants import Constants
-from bot.keyboards.inline_buttons import current_asset
 from bot.loader import dp
 from bot.services.markup_maker import assets_markup_maker, \
     current_asset_markup_maker
-from traider.candles_service.get_my_candles import candles, TimeDelta
-from traider.user_info_service.get_user_info import user_info
+from traider.user_info_service.get_user_info import user_info, user_operations
 
 
 def get_balance_message(my_balance):
@@ -26,6 +24,18 @@ async def run_start_command(messages: Message):
           f'\n цена продажи всех активов {price_after_selling_assets()}'
     await messages.answer(mes, reply_markup=assets_markup_maker(
         user_info.get_list_of_assets()))
+
+
+def get_mes(opers: list[Operation]):
+    res = [i for i in opers]
+    return 'new_mes'
+
+
+@dp.message_handler(Text(equals=Constants.LAST_OPERATIONS))
+async def get_list_of_operations(messages: Message):
+    mes = user_operations.get_last_operations()
+    mew = get_mes(mes)
+    await messages.answer(text=mew)
 
 
 @dp.callback_query_handler(

@@ -1,7 +1,11 @@
 # assset - актив. Подразумевается, что это конкретный элемент из активов в портфеле на счете у брокера
+import datetime
+import typing
+
 from tinkoff.invest import (
     PortfolioPosition
 )
+from tinkoff.invest.grpc.operations_pb2 import OperationsResponse, Operation
 
 from traider.responses.user_info_responses import (
     AssetsShow,
@@ -82,4 +86,34 @@ class PortfolioUserInfo(TraiderClient):
         return 'ничего не нафдено'
 
 
+class UserOperations(TraiderClient):
+    def __init__(self):
+        super().__init__()
+
+    @staticmethod
+    def _days_int_to_datetime(days_ago: int) -> datetime:
+        """Метод перевода количества дней в дату, предшествующую текущей на указанное количество дней."""
+        today = datetime.datetime.now()
+        delta = datetime.timedelta(days=days_ago)
+        return today - delta
+
+    def get_last_operations(
+            self, days_ago: int = 10,
+            figi: typing.Optional[str] = None) -> list[Operation]:
+        """Возвращает последние операции пользователя за определенное количество дней.
+            :param days_ago количество дней за которое необходимо узнать об операциях.
+            :param figi неоьязательный аргумент для поиска операций по его идентификатору
+        """
+        params = {
+            'account_id': self.id_,
+            'from_': self._days_int_to_datetime(days_ago),
+            'to': datetime.datetime.utcnow(),
+        }
+        if figi:
+            params.update({'figi': figi})
+            return self._operations.get_operations(**params).operations
+        return self._operations.get_operations(**params).operations
+
+
 user_info = PortfolioUserInfo()
+user_operations = UserOperations()

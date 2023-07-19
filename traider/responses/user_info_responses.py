@@ -22,3 +22,7 @@ class ShowMyMoney(BaseModel):
 class CurrentAsset(BaseModel):
     current_price: float = Field(...)
     nkd: float | None
+
+
+class OperationsBase(BaseModel):
+    ...
